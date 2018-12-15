@@ -16,7 +16,7 @@ import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class UserServiceTest extends BaseTest {
-    @Mock
+    @Mock       //db가 없어도 테스트 가능 하도록 ( db에 의존하지 않도록)
     private UserRepository userRepository;
 
     @InjectMocks
