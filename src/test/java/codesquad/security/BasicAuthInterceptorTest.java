@@ -10,9 +10,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.mock.web.MockHttpServletRequest;
 import support.test.BaseTest;
 
-import java.util.ArrayList;
 import java.util.Base64;
-import java.util.List;
 
 import static org.mockito.Mockito.when;
 

@@ -7,10 +7,12 @@ import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 
 @SpringBootApplication
+
+
 @ComponentScan({"codesquad", "support"})
 @EnableJpaAuditing
 @EnableAspectJAutoProxy(proxyTargetClass = true)
-public class QnaApplication {
+public class                    QnaApplication {
     public static void main(String[] args) {
         SpringApplication.run(QnaApplication.class, args);
     }

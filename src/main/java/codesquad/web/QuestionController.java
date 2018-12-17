@@ -1,6 +1,7 @@
 package codesquad.web;
 
 
+import codesquad.UnAuthorizedException;
 import codesquad.domain.Question;
 import codesquad.domain.User;
 import codesquad.security.LoginUser;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 @RequestMapping("/questions")
@@ -24,25 +26,39 @@ public class QuestionController {
     private QnaService qnaService;
 
     @GetMapping("/form")
-    public String form(@LoginUser User loginUser ) {
+    public String form(@LoginUser User loginUser) {
         return "/qna/form";
     }
 
-    @PostMapping("")
-    public String create(Question question) {
-        qnaService.add(question);
+    @PutMapping("/{id}")
+    public String create(Question updateQuestion, @PathVariable long id, @LoginUser User loginUser) {
+        Question question = qnaService.findById(id);
+        if (question.isOwner(loginUser)) {
+            question.modify(updateQuestion, loginUser);
+            qnaService.add(question);
+        }
         return "redirect:/";
     }
 
-//    @GetMapping("/{id}/form")
-//    public String updateForm(@LoginUser User loginUser, @PathVariable long id, Model model) {
-//        model.addAttribute("user", userService.findById(loginUser, id));
-//        return "/questions/updateForm";
-//    }
-//
     @GetMapping("/{id}")
-    public String show(@PathVariable long id,Model model) {
-        model.addAttribute("question",qnaService.findById(id));
+    public String show(@PathVariable long id, Model model, @LoginUser User loginUser) {
+        model.addAttribute("question", qnaService.findById(id));
         return "/qna/show";
+    }
+
+    @GetMapping("/{id}/form")
+    public String updateForm(@LoginUser User loginUser, @PathVariable long id, Model model) {
+        Question question = qnaService.findById(id);
+        if (question.isOwner(loginUser)) {
+            model.addAttribute("question", question);
+            return "/qna/updateForm";
+        }
+        return "redirect:/";
+    }
+
+    @DeleteMapping("/{id}")
+    public String deleteForm(@LoginUser User loginUser, @PathVariable long id){
+        qnaService.deleteQuestion(loginUser,id);
+        return "redirect:/";
     }
 }

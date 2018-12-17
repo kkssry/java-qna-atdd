@@ -1,5 +1,6 @@
 package codesquad.domain;
 
+import codesquad.security.LoginUser;
 import org.hibernate.annotations.Where;
 import support.domain.AbstractEntity;
 import support.domain.UrlGeneratable;
@@ -75,6 +76,19 @@ public class Question extends AbstractEntity implements UrlGeneratable {
 
     public boolean isDeleted() {
         return deleted;
+    }
+
+    public void deleteQuestion(User loginUser) {
+        if (isOwner(loginUser)) {
+            deleted = true;
+        }
+    }
+
+    public void modify(Question updateQuestion, User loginUser) {
+        if (isOwner(loginUser)) {
+            contents = updateQuestion.contents;
+            title = updateQuestion.title;
+        }
     }
 
     @Override

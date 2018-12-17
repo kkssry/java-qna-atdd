@@ -28,12 +28,13 @@ public class UserServiceTest extends BaseTest {
         when(userRepository.findByUserId(user.getUserId())).thenReturn(Optional.of(user));
         User loginUser = userService.login(user.getUserId(), user.getPassword());
         softly.assertThat(loginUser).isEqualTo(user);
+
     }
 
     @Test(expected = UnAuthenticationException.class)
     public void login_failed_when_user_not_found() throws Exception {
         when(userRepository.findByUserId("sanjigi")).thenReturn(Optional.empty());
-        userService.login("sanjigi", "password");
+        userService.login("javajigi", "password");
     }
 
     @Test(expected = UnAuthenticationException.class)
@@ -41,5 +42,10 @@ public class UserServiceTest extends BaseTest {
         User user = new User("sanjigi", "password", "name", "javajigi@slipp.net");
         when(userRepository.findByUserId(user.getUserId())).thenReturn(Optional.of(user));
         userService.login(user.getUserId(), user.getPassword() + "2");
+    }
+
+    @Test(expected = UnAuthenticationException.class)
+    public void test() throws UnAuthenticationException {
+        Optional.empty().orElseThrow(UnAuthenticationException::new);
     }
 }
