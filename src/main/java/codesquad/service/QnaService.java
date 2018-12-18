@@ -1,7 +1,5 @@
 package codesquad.service;
 
-import codesquad.CannotDeleteException;
-import codesquad.UnAuthenticationException;
 import codesquad.UnAuthorizedException;
 import codesquad.domain.*;
 import org.slf4j.Logger;
@@ -12,7 +10,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.List;
-import java.util.Optional;
 
 @Service("qnaService")  //서비스에서는 비즈니스 로직을 구현하는 곳이 아니다!! , thin layer - 가볍게 구현해야 한다.
 //상태값을 가지는 곳은 domain이다.
@@ -56,7 +53,7 @@ public class QnaService {
                 .orElseThrow(UnAuthorizedException::new);
 
         if (!question.isDeleted()) {
-            question.deleteQuestion(loginUser);
+            question.delete(loginUser);
             questionRepository.save(question);
         }
     }

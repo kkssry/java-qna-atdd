@@ -98,21 +98,17 @@ public class QuestionAcceptanceTest extends AcceptanceTest {
                 .build();
     }
 
+
     @Test
     public void delete_no_login() {
-        HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm()
-                .delete()
-                .build();
+        HttpEntity<MultiValueMap<String, Object>> request = deleteQuestion();
         ResponseEntity<String> response = template().postForEntity(String.format("/questions/%d",2),request,String.class);
         softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
     }
 
     @Test
     public void delete_other_user() {
-        HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm()
-                .delete()
-                .build();
-
+        HttpEntity<MultiValueMap<String, Object>> request = deleteQuestion();
         ResponseEntity<String> response = basicAuthTemplate(defaultUser())
                 .postForEntity(String.format("/questions/%d", 2), request, String.class);
         softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
@@ -120,14 +116,17 @@ public class QuestionAcceptanceTest extends AcceptanceTest {
 
     @Test
     public void delete_self() {
-        HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm()
-                .delete()
-                .build();
-
+        HttpEntity<MultiValueMap<String, Object>> request = deleteQuestion();
         ResponseEntity<String> response = basicAuthTemplate(defaultUser())
                 .postForEntity(String.format("/questions/%d", 1), request, String.class);
-
         softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FOUND);
         softly.assertThat(response.getHeaders().getLocation().getPath()).startsWith("/");
     }
+
+    public HttpEntity<MultiValueMap<String, Object>> deleteQuestion() {
+        return HtmlFormDataBuilder.urlEncodedForm()
+                .delete()
+                .build();
+    }
+
 }

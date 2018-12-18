@@ -1,12 +1,10 @@
 package codesquad.web;
 
 
-import codesquad.UnAuthorizedException;
 import codesquad.domain.Question;
 import codesquad.domain.User;
 import codesquad.security.LoginUser;
 import codesquad.service.QnaService;
-import codesquad.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -14,8 +12,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
-import java.util.List;
-import java.util.Optional;
 
 @Controller
 @RequestMapping("/questions")
@@ -57,8 +53,8 @@ public class QuestionController {
     }
 
     @DeleteMapping("/{id}")
-    public String deleteForm(@LoginUser User loginUser, @PathVariable long id){
-        qnaService.deleteQuestion(loginUser,id);
+    public String deleteForm(@LoginUser User loginUser, @PathVariable long id) {
+        qnaService.deleteQuestion(loginUser, id);
         return "redirect:/";
     }
 }
