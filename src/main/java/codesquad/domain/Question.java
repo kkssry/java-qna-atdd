@@ -76,7 +76,8 @@ public class Question extends AbstractEntity implements UrlGeneratable {
         answers.add(answer);
     }
 
-    public boolean isOwner(User loginUser) {
+    public boolean
+    isOwner(User loginUser) {
         return writer.equals(loginUser);
     }
 

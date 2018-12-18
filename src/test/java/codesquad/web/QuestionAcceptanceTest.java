@@ -38,15 +38,8 @@ public class QuestionAcceptanceTest extends AcceptanceTest {
     @Test
     public void create() {
         User loginUser = defaultUser();
-        HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm()
-                .addParameter("title", "제목입니다.")
-                .addParameter("contents", "내용입니다.")
-                .build();
-
-        ResponseEntity<String> response = basicAuthTemplate(loginUser).postForEntity("/questions", request, String.class);
-
-        softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FOUND);
-        softly.assertThat(response.getHeaders().getLocation().getPath()).startsWith("/");
+        ResponseEntity<String> response = basicAuthTemplate(loginUser).getForEntity("/questions", String.class);
+        softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     }
 
     @Test
@@ -72,22 +65,20 @@ public class QuestionAcceptanceTest extends AcceptanceTest {
     public void update_no_login() {
         HttpEntity<MultiValueMap<String, Object>> request = createQuestion();
         ResponseEntity<String> response = template().postForEntity(String.format("/questions/%d", 2), request, String.class);
-        softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FOUND);
+        softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
     }
 
     @Test
     public void update_other_user() {
-        HttpEntity<MultiValueMap<String, Object>> request = createQuestion();
-        ResponseEntity<String> response = basicAuthTemplate().postForEntity(String.format("/questions/%d", 2), request, String.class);
+        ResponseEntity<String> response = basicAuthTemplate().getForEntity(String.format("/questions/%d/form", 2) ,String.class);
         softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FOUND);
     }
 
     @Test
     public void update_self() {
-        HttpEntity<MultiValueMap<String, Object>> request = createQuestion();
-        ResponseEntity<String> response = basicAuthTemplate(defaultUser()).postForEntity(String.format("/questions/%d", 1), request, String.class);
+        ResponseEntity<String> response = basicAuthTemplate(defaultUser()).getForEntity(String.format("/questions/%d/form", 1), String.class);
         softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-        softly.assertThat(response.getBody().contains("Ruby on Rails(이하 RoR)는")).isTrue();
+        softly.assertThat(response.getBody().contains("국내에서 Ruby on Rails와")).isTrue();
     }
 
     public HttpEntity<MultiValueMap<String, Object>> createQuestion() {

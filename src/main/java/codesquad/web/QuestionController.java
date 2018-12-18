@@ -21,7 +21,7 @@ public class QuestionController {
     @Resource(name = "qnaService")
     private QnaService qnaService;
 
-    @GetMapping("/form")
+    @GetMapping("")
     public String form(@LoginUser User loginUser) {
         return "/qna/form";
     }
