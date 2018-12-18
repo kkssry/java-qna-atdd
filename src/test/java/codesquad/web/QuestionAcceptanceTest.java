@@ -22,7 +22,7 @@ public class QuestionAcceptanceTest extends AcceptanceTest {
     @Test
     public void createForm_no_login() throws Exception {
         ResponseEntity<String> response = template()
-                .getForEntity("/questions/form", String.class); //입력값
+                .getForEntity("/questions", String.class); //입력값
         softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
         log.debug("body : {}", response.getBody());
     }
@@ -31,7 +31,7 @@ public class QuestionAcceptanceTest extends AcceptanceTest {
     public void createForm_login() throws Exception {
         User loginUser = defaultUser();
         ResponseEntity<String> response = basicAuthTemplate(loginUser)
-                .getForEntity("/questions/form", String.class);
+                .getForEntity("/questions", String.class);
         softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     }
 
