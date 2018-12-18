@@ -37,25 +37,12 @@ public class QnaService {
 
     @Transactional
     public void update(User loginUser, long id, Question updatedQuestion) {
-        questionRepository
-                .findById(id)
-                .filter(user -> user.isOwner(loginUser))
-                .orElseThrow(UnAuthorizedException::new)
-                .modify(updatedQuestion, loginUser);
-
+        findById(id).modify(updatedQuestion, loginUser);
     }
 
     @Transactional
-    public void deleteQuestion(User loginUser, long questionId) {
-        Question question = questionRepository
-                .findById(questionId)
-                .filter(writer -> writer.isOwner(loginUser))
-                .orElseThrow(UnAuthorizedException::new);
-
-        if (!question.isDeleted()) {
-            question.delete(loginUser);
-            questionRepository.save(question);
-        }
+    public void delete(User loginUser, long id) {
+        findById(id).delete(loginUser);
     }
 
     public Iterable<Question> findAll() {

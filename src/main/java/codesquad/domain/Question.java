@@ -89,15 +89,15 @@ public class Question extends AbstractEntity implements UrlGeneratable {
         if (!isOwner(loginUser)) {
             throw new UnAuthorizedException();
         }
-            deleted = true;
+        deleted = true;
     }
 
     public void modify(Question updateQuestion, User loginUser) {
         if (!isOwner(loginUser)) {
             throw new UnAuthorizedException();
         }
-            contents = updateQuestion.contents;
-            title = updateQuestion.title;
+        contents = updateQuestion.contents;
+        title = updateQuestion.title;
     }
 
     @Override
