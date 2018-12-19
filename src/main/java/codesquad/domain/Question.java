@@ -11,6 +11,7 @@ import javax.persistence.*;
 import javax.validation.constraints.Size;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
@@ -45,6 +46,8 @@ public class Question extends AbstractEntity implements UrlGeneratable {
         this.contents = contents;
     }
 
+
+
     public String getTitle() {
         return title;
     }
@@ -63,6 +66,10 @@ public class Question extends AbstractEntity implements UrlGeneratable {
         return this;
     }
 
+    public Question setTitleAndContents(String title, String contents) {
+        return setTitle(title).setContents(contents);
+    }
+
     public User getWriter() {
         return writer;
     }
@@ -76,8 +83,7 @@ public class Question extends AbstractEntity implements UrlGeneratable {
         answers.add(answer);
     }
 
-    public boolean
-    isOwner(User loginUser) {
+    public boolean isOwner(User loginUser) {
         return writer.equals(loginUser);
     }
 
@@ -92,12 +98,13 @@ public class Question extends AbstractEntity implements UrlGeneratable {
         deleted = true;
     }
 
-    public void modify(Question updateQuestion, User loginUser) {
+    public Question modify(Question updateQuestion, User loginUser) {
         if (!isOwner(loginUser)) {
-            throw new UnAuthorizedException();
+            throw new UnAuthorizedException();      //forbidden
         }
         contents = updateQuestion.contents;
         title = updateQuestion.title;
+        return this;
     }
 
     @Override
@@ -108,5 +115,12 @@ public class Question extends AbstractEntity implements UrlGeneratable {
     @Override
     public String toString() {
         return "Question [id=" + getId() + ", title=" + title + ", contents=" + contents + ", writer=" + writer + "]";
+    }
+
+    public boolean equalsWriter(Question target) {
+        if (Objects.isNull(target)){
+            return false;
+        }
+        return isOwner(target.writer);
     }
 }

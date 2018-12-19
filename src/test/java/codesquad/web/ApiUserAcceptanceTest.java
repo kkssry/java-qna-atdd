@@ -40,14 +40,13 @@ public class ApiUserAcceptanceTest extends AcceptanceTest {
         ResponseEntity<Void> response = template().postForEntity("/api/users", newUser, Void.class);
         String location = response.getHeaders().getLocation().getPath();
         softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
-        User original = basicAuthTemplate(newUser).getForObject(location, User.class);
 
-        User updateUser = new User
-                (original.getId(), original.getUserId(), original.getPassword(),
+        User original = basicAuthTemplate(newUser).getForObject(location, User.class);
+        User updateUser = new User(original.getId(), original.getUserId(), original.getPassword(),
                         "javajigi2", "javajigi2@slipp.net");
 
         ResponseEntity<User> responseEntity =
-                basicAuthTemplate(newUser).exchange(location, HttpMethod.PUT, createHttpEntity(updateUser), User.class);
+                basicAuthTemplate(newUser).exchange(location , HttpMethod.PUT, createHttpEntity(updateUser), User.class);
 
         softly.assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
         softly.assertThat(updateUser.equalsNameAndEmail(responseEntity.getBody())).isTrue();
@@ -61,8 +60,7 @@ public class ApiUserAcceptanceTest extends AcceptanceTest {
         softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
         User original = basicAuthTemplate(newUser).getForObject(location, User.class);
 
-        User updateUser = new User
-                (original.getId(), original.getUserId(), original.getPassword(),
+        User updateUser = new User(original.getId(), original.getUserId(), original.getPassword(),
                         "javajigi2", "javajigi2@slipp.net");
 
         ResponseEntity<String> responseEntity =
@@ -82,7 +80,7 @@ public class ApiUserAcceptanceTest extends AcceptanceTest {
         User updateUser = new User(newUser.getUserId(), "password", "name2", "javajigi@slipp.net2");
 
         ResponseEntity<Void> responseEntity =
-                basicAuthTemplate(defaultUser()).exchange(location, HttpMethod.PUT, createHttpEntity(updateUser), Void.class);
+                basicAuthTemplate().exchange(location, HttpMethod.PUT, createHttpEntity(updateUser), Void.class);
         softly.assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
     }
 

@@ -27,18 +27,14 @@ public class QuestionController {
     }
 
     @PostMapping("")
-    public String form(@LoginUser User loginUser, Question question){
-        qnaService.add(question);
+    public String form(@LoginUser User loginUser, Question question) {
+        qnaService.create(loginUser, question);
         return "redirect:/";
     }
 
     @PutMapping("/{id}")
-    public String update(Question updateQuestion, @PathVariable long id, @LoginUser User loginUser) {
-        Question question = qnaService.findById(id);
-        if (question.isOwner(loginUser)) {
-            question.modify(updateQuestion, loginUser);
-            qnaService.add(question);
-        }
+    public String update(@LoginUser User loginUser,  @PathVariable long id, Question updateQuestion) {
+        qnaService.update(loginUser, id, updateQuestion);
         return "redirect:/";
     }
 

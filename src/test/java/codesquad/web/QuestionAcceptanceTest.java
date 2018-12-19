@@ -77,7 +77,7 @@ public class QuestionAcceptanceTest extends AcceptanceTest {
     public void update_other_user() {
         HttpEntity<MultiValueMap<String, Object>> request = createQuestion();
         ResponseEntity<String> response = basicAuthTemplate().postForEntity(String.format("/questions/%d", 2), request, String.class);
-        softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FOUND);
+        softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
     }
 
     @Test

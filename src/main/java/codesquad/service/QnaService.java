@@ -12,7 +12,7 @@ import javax.annotation.Resource;
 import java.util.List;
 
 @Service("qnaService")  //서비스에서는 비즈니스 로직을 구현하는 곳이 아니다!! , thin layer - 가볍게 구현해야 한다.
-//상태값을 가지는 곳은 domain이다.
+                        //상태값을 가지는 곳은 domain이다.
 public class QnaService {
     private static final Logger log = LoggerFactory.getLogger(QnaService.class);
 
@@ -36,8 +36,8 @@ public class QnaService {
     }
 
     @Transactional
-    public void update(User loginUser, long id, Question updatedQuestion) {
-        findById(id).modify(updatedQuestion, loginUser);
+    public Question update(User loginUser, long id, Question updatedQuestion) {
+        return findById(id).modify(updatedQuestion, loginUser);
     }
 
     @Transactional
@@ -61,9 +61,5 @@ public class QnaService {
     public Answer deleteAnswer(User loginUser, long id) {
         // TODO 답변 삭제 기능 구현 
         return null;
-    }
-
-    public void add(Question question) {
-        questionRepository.save(question);
     }
 }

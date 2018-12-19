@@ -28,7 +28,8 @@ public abstract class AcceptanceTest extends BaseTest {
         return basicAuthTemplate(defaultUser());
     }
 
-    public TestRestTemplate basicAuthTemplate(User loginUser) {
+    public TestRestTemplate
+    basicAuthTemplate(User loginUser) {
         return template.withBasicAuth(loginUser.getUserId(), loginUser.getPassword());
     }
 
