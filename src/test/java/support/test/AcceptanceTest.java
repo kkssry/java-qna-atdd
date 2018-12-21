@@ -1,5 +1,6 @@
 package support.test;
 
+import codesquad.domain.Question;
 import codesquad.domain.User;
 import codesquad.domain.UserRepository;
 import org.junit.runner.RunWith;
@@ -44,12 +45,20 @@ public abstract class AcceptanceTest extends BaseTest {
     }
 
     protected String createResource(String path, Object bodyPayload) {
-        ResponseEntity<String> response = template().postForEntity(path, bodyPayload, String.class);
+        ResponseEntity<String> response = basicAuthTemplate().postForEntity(path, bodyPayload, String.class);
         softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
         return response.getHeaders().getLocation().getPath();
     }
 
     protected <T> T getResource(String location, Class<T> responseType, User loginUser) {
         return basicAuthTemplate(loginUser).getForObject(location, responseType);
+    }
+
+    protected Question createQuestion() {
+        return new Question("제목입니다.", "내용입니다.");
+    }
+
+    protected Question updateQuestion() {
+        return new Question("업데이트 제목", "업데이트 내용");
     }
 }

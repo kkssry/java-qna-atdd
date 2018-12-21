@@ -16,12 +16,7 @@ public class ApiAnswerAcceptanceTest extends AcceptanceTest {
 
     @Test
     public void create() {
-        Question question = new Question("제목입니다.", "내용입니다.");
-        ResponseEntity<Question> questionResponse = basicAuthTemplate().postForEntity("/api/questions", question, Question.class);  //질문만듦
-        softly.assertThat(questionResponse.getStatusCode()).isEqualTo(HttpStatus.CREATED);
-        log.debug("questionResponse: {}" + questionResponse);
-
-        String location = questionResponse.getHeaders().getLocation().getPath();
+        String location = createResource("/api/questions", updateQuestion());
 
         Answer newAnswer = new Answer(UserTest.SANJIGI, "댓글입니다.");
         ResponseEntity<Question> answerResponse = basicAuthTemplate(findByUserId("sanjigi"))

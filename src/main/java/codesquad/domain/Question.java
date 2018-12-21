@@ -106,11 +106,11 @@ public class Question extends AbstractEntity implements UrlGeneratable {
         return this;
     }
 
-    public boolean equalsWriter(Question target) {
-        if (Objects.isNull(target)){
+    public boolean equalsWriter(User loginUser) {
+        if (Objects.isNull(loginUser)){
             return false;
         }
-        return isOwner(target.writer);
+        return isOwner(loginUser);
     }
 
 
