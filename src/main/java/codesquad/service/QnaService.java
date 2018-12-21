@@ -2,6 +2,7 @@ package codesquad.service;
 
 import codesquad.UnAuthorizedException;
 import codesquad.domain.*;
+import codesquad.security.LoginUser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Pageable;
@@ -53,11 +54,20 @@ public class QnaService {
         return questionRepository.findAll(pageable).getContent();
     }
 
-    public Answer addAnswer(User loginUser, long questionId, String contents) {
-        // TODO 답변 추가 기능 구현
-        return null;
+    public void checkLogin(User loginUser) {
+        if (loginUser == null)
+            throw new UnAuthorizedException();
     }
 
+    @Transactional
+    public Answer addReply(User loginUser, long questionId, String contents) {
+        // TODO 답변 추가 기능 구현
+        Answer addAnswer1 = new Answer(loginUser, contents);
+        findById(questionId).addAnswer(addAnswer1);
+        return addAnswer1;
+    }
+
+    @Transactional
     public Answer deleteAnswer(User loginUser, long id) {
         // TODO 답변 삭제 기능 구현 
         return null;

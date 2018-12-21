@@ -39,7 +39,7 @@ public class QuestionController {
     }
 
     @GetMapping("/{id}")
-    public String showForm(@PathVariable long id, Model model, @LoginUser User loginUser) {
+    public String showForm(@PathVariable long id, Model model) {
         model.addAttribute("question", qnaService.findById(id));
         return "/qna/show";
     }

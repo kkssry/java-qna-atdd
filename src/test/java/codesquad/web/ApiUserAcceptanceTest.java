@@ -17,7 +17,7 @@ public class ApiUserAcceptanceTest extends AcceptanceTest {
         User newUser = newUser("testuser1");
         ResponseEntity<Void> response = template().postForEntity("/api/users", newUser, Void.class);
         softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
-        String location = response.getHeaders().getLocation().getPath();
+        String location = response.getHeaders().getLocation().getPath();        //질문 만듦
 
         User dbUser = basicAuthTemplate(findByUserId(newUser.getUserId())).getForObject(location, User.class);
         softly.assertThat(dbUser).isNotNull();
@@ -69,6 +69,7 @@ public class ApiUserAcceptanceTest extends AcceptanceTest {
         softly.assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
         log.debug("error message : {}", responseEntity.getBody());
     }
+
 
     @Test
     public void update_다른_사람() throws Exception {
