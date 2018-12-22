@@ -19,9 +19,14 @@ public class ApiAnswerController {
     private QnaService qnaService;
 
     @PostMapping("")
-    public ResponseEntity<Void> create(@LoginUser User loginUser, String contents, @PathVariable long questionId) {
+    public ResponseEntity<Question> create(@LoginUser User loginUser, @PathVariable long questionId, String contents) {
         qnaService.addReply(loginUser, questionId, contents);
         HttpHeaders headers = new HttpHeaders();
-        return new ResponseEntity<Void>(headers, HttpStatus.CREATED);
+        return new ResponseEntity<Question>(qnaService.findByQuestionId(questionId), headers, HttpStatus.CREATED);
+    }
+
+    @DeleteMapping("/{answerId}")
+    public Answer delete(@LoginUser User loginUser, @PathVariable long answerId) {
+        return qnaService.deleteAnswer(loginUser, answerId);
     }
 }

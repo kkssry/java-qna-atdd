@@ -25,16 +25,16 @@ public class ApiQuestionController {
     private QnaService qnaService;
 
     @PostMapping("")                                                        //RequestBody : json객체를 자바객체로 맵핑해라.(set메서드를 통해서)
-    public ResponseEntity<Void> create(@LoginUser User loginUser, @Valid @RequestBody Question question) {
+    public ResponseEntity<Question> create(@LoginUser User loginUser, @Valid @RequestBody Question question) {
         Question savedQuestion = qnaService.create(loginUser, question);
         HttpHeaders headers = new HttpHeaders();                                        //요청한후의 응답
         headers.setLocation(URI.create("/api/questions/" + savedQuestion.getId()));     //요청한후의 응답
-        return new ResponseEntity<Void>(headers, HttpStatus.CREATED);                   //요청한후의 응답
+        return new ResponseEntity<Question>(headers, HttpStatus.CREATED);                   //요청한후의 응답
     }
 
     @GetMapping("/{id}")
     public Question show(@PathVariable long id) {
-        return qnaService.findById(id);
+        return qnaService.findByQuestionId(id);
     }
 
     // request Body : json -> 자바객체        // request : json으로 보낸다

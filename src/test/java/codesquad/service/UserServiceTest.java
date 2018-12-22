@@ -10,6 +10,7 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import support.test.BaseTest;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.Optional;
 
 import static org.mockito.Mockito.when;

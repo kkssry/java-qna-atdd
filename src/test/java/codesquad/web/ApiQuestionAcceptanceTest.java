@@ -45,7 +45,7 @@ public class ApiQuestionAcceptanceTest extends AcceptanceTest {
 
         log.debug("response : {}", responseEntity.getBody());
         softly.assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
-        softly.assertThat(responseEntity.getBody().equalsWriter(findByUserId("javajigi"))).isTrue();
+        softly.assertThat(responseEntity.getBody().getTitle()).isEqualTo("업데이트 제목");
     }
 
     @Test
@@ -67,12 +67,5 @@ public class ApiQuestionAcceptanceTest extends AcceptanceTest {
 
         softly.assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
     }
-
-    private HttpEntity createHttpEntity(Object body) {
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        return new HttpEntity(body, headers);
-    }
-
 
 }

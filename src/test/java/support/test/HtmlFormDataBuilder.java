@@ -38,6 +38,6 @@ public class HtmlFormDataBuilder {
     }
 
     public HtmlFormDataBuilder delete() {
-        return addParameter("_method", "delete");
+        return addParameter("_method", "deleteQuestion");
     }
 }

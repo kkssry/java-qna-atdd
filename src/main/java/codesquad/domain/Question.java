@@ -64,25 +64,26 @@ public class Question extends AbstractEntity implements UrlGeneratable {
         return this;
     }
 
-    public Question setTitleAndContents(String title, String contents) {
-        return setTitle(title).setContents(contents);
-    }
-
     public User getWriter() {
         return writer;
     }
 
-    public void writeBy(User loginUser) {
+    public void writtenBy(User loginUser) {
         this.writer = loginUser;
     }
 
-    public Question addAnswer(Answer answer) {
-        answer.toQuestion(this);
-        answers.add(answer);
+    public Question addAnswer(User loginUser, Answer answer) {
+        if (isOwner(loginUser)) {
+            answer.toQuestion(this);
+            answers.add(answer);
+        }
         return this;
     }
 
     public boolean isOwner(User loginUser) {
+        if (Objects.isNull(loginUser)){
+            return false;
+        }
         return writer.equals(loginUser);
     }
 
@@ -105,14 +106,6 @@ public class Question extends AbstractEntity implements UrlGeneratable {
         title = updateQuestion.title;
         return this;
     }
-
-    public boolean equalsWriter(User loginUser) {
-        if (Objects.isNull(loginUser)){
-            return false;
-        }
-        return isOwner(loginUser);
-    }
-
 
     @Override
     public String generateUrl() {

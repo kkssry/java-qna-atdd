@@ -29,11 +29,12 @@ public class ApiUserController {
 
     @GetMapping("{id}")
     public User show(@LoginUser User loginUser, @PathVariable long id) {
-        return userService.findById(loginUser, id);
+        return userService.findById(id);
     }
 
     @PutMapping("{id}")
     public User update(@LoginUser User loginUser, @PathVariable long id, @Valid @RequestBody User updatedUser) {
+        System.out.println("!!!!!!!!!!!!!!!!" + loginUser);
         return userService.update(loginUser, id, updatedUser);
     }
 }
