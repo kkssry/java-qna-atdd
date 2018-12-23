@@ -132,7 +132,9 @@ public class User extends AbstractEntity {
         if (!(o instanceof User)) return false;
         if (!super.equals(o)) return false;
         User user = (User) o;
-        return Objects.equals(getId(), user.getId());
+        return Objects.equals(getUserId(), user.getUserId()) &&
+                Objects.equals(getPassword(), user.getPassword()) &&
+                Objects.equals(getId(),user.getId());
     }
 
     @Override

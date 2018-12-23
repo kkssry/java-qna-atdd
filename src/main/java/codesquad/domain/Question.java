@@ -1,5 +1,6 @@
 package codesquad.domain;
 
+import codesquad.UnAuthenticationException;
 import codesquad.UnAuthorizedException;
 import codesquad.security.LoginUser;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -71,7 +72,9 @@ public class Question extends AbstractEntity implements UrlGeneratable {
     }
 
     public void writtenBy(User loginUser) {
-        this.writer = loginUser;
+        if (isLogin(loginUser)){
+            this.writer = loginUser;
+        }
     }
 
     public Answer addAnswer(User loginUser, Answer answer) {
@@ -84,15 +87,13 @@ public class Question extends AbstractEntity implements UrlGeneratable {
 
     public boolean isLogin(User loginUser) {
         if(loginUser == null) {
-            throw new UnAuthorizedException();
+            throw new UnAuthenticationException();
         }
         return true;
     }
 
     public boolean isOwner(User loginUser) {
-        if (Objects.isNull(loginUser)){
-            return false;
-        }
+        isLogin(loginUser);
         return writer.equals(loginUser);
     }
 

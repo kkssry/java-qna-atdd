@@ -33,6 +33,7 @@ public class QnaService {
 
     public Question findByQuestionId(long id) {
         return questionRepository.findById(id).orElseThrow(EntityNotFoundException::new);
+        //존재 하지 않는 질문을 수정하고자 할때 bad request란 에러를 발생시킴
     }
 
     public Answer findByAnswerId(long id) {

@@ -37,7 +37,7 @@ public class ApiAnswerAcceptanceTest extends AcceptanceTest {
     public void delete() {
         String location = createResource("/api/questions", createQuestion());       // 질문을 만들었음 , 반환값 : /api/questions/{만들질문ID}
         Answer newAnswer = new Answer("댓글입니다.");          // sanjigi가 만든 댓글
-        System.out.println("!!!!!!!!!!!!!!" + newAnswer.getId());
+
         ResponseEntity<Question> answerCreateResponse = basicAuthTemplate(findByUserId("sanjigi"))
                 .postForEntity(location + "/answers", newAnswer.getContents(), Question.class);       //sanjigi가 위에 만든 질문안에 위에서 만든 댓글을 달음 , apiAnswerController에서 질문 생성한 맵핑메서드의 반환값이 나오므로 제네릭이 Question, Answer을 넣어도 controller의 반환값인 question이 반환된다.
         log.debug("answerCreateResponse : {}", answerCreateResponse);                                            // /api/questions/{만들질문ID}/answer로 보낸 응답값
