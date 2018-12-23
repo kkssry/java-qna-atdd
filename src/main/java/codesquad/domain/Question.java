@@ -1,5 +1,6 @@
 package codesquad.domain;
 
+import codesquad.CannotDeleteException;
 import codesquad.UnAuthenticationException;
 import codesquad.UnAuthorizedException;
 import codesquad.security.LoginUser;
@@ -110,7 +111,7 @@ public class Question extends AbstractEntity implements UrlGeneratable {
                 .filter(answer -> answer.isDeleted() == false)
                 .count();
         if (otherUserCount > 0) {
-            return this;
+            throw new CannotDeleteException();
         }
         deleted = true;
         return this;
