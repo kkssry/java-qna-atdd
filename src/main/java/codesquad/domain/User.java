@@ -109,13 +109,6 @@ public class User extends AbstractEntity {
         return true;
     }
 
-    public boolean equalsNameAndEmail(User target) {
-        if (isOwn(target)) {       //로그인 안함
-            return name.equals(target.name) && email.equals(target.email);
-        }
-            return false;
-    }
-
     @JsonIgnore
     public boolean isGuestUser() {
         return false;
@@ -139,8 +132,7 @@ public class User extends AbstractEntity {
         if (!(o instanceof User)) return false;
         if (!super.equals(o)) return false;
         User user = (User) o;
-        return Objects.equals(getUserId(), user.getUserId()) &&
-                Objects.equals(getPassword(), user.getPassword());
+        return Objects.equals(getId(), user.getId());
     }
 
     @Override

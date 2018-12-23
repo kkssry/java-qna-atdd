@@ -28,6 +28,10 @@ public class Answer extends AbstractEntity implements UrlGeneratable {
     public Answer() {
     }
 
+    public Answer(String contents) {
+        this.contents = contents;
+    }
+
     public Answer(User writer, String contents) {
         if (isLogin(writer)) {
             this.writer = writer;
@@ -60,6 +64,16 @@ public class Answer extends AbstractEntity implements UrlGeneratable {
         return this;
     }
 
+
+    public void setQuestion(Question question) {
+        this.question = question;
+    }
+
+    public boolean getDeleted() {
+        return deleted;
+    }
+
+
     public void toQuestion(Question question) {
         this.question = question;
     }
@@ -71,22 +85,26 @@ public class Answer extends AbstractEntity implements UrlGeneratable {
         throw new UnAuthorizedException();
     }
 
+    public Answer delete(User loginUser) {
+        if (!isOwner(loginUser)) {
+            throw new UnAuthorizedException();
+        }
+        deleted = true;
+        return this;
+    }
+
     public Boolean isLogin(User writer) {
-        if (writer != null)
-            return true;
-        throw new UnAuthenticationException();
+        if (writer == null){
+            throw new UnAuthenticationException();
+        }
+        return true;
     }
 
     public boolean isDeleted() {
         return deleted;
     }
 
-    public Answer answerChangeDeleted(User loginUser) {
-        if (isOwner(loginUser)) {
-            deleted = true;
-        }
-        return this;
-    }
+
 
     @Override
     public String generateUrl() {

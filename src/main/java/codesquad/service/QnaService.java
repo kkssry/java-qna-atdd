@@ -39,7 +39,6 @@ public class QnaService {
         return answerRepository.findById(id).orElseThrow(EntityNotFoundException::new);
     }
 
-
     @Transactional
     public Question update(User loginUser, long id, Question updatedQuestion) {
         return findByQuestionId(id).modify(updatedQuestion, loginUser);
@@ -61,16 +60,13 @@ public class QnaService {
     @Transactional
     public Answer addReply(User loginUser, long questionId, String contents) {
         // TODO 답변 추가 기능 구현
-        Answer addAnswer = new Answer(loginUser, contents);
-        findByQuestionId(questionId).addAnswer(loginUser, addAnswer);
-
-
-        return addAnswer;
+        Answer newAnswer = new Answer(loginUser, contents);
+        return findByQuestionId(questionId).addAnswer(loginUser, newAnswer);
     }
 
     @Transactional
     public Answer deleteAnswer(User loginUser, long answerId) {
         // TODO 답변 삭제 기능 구현
-        return findByAnswerId(answerId).answerChangeDeleted(loginUser);
+        return findByAnswerId(answerId).delete(loginUser);
     }
 }

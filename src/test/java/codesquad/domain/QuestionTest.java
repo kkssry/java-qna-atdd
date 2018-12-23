@@ -28,7 +28,8 @@ public class QuestionTest extends BaseTest {
 
     @Test
     public void delete_owner() {
-        question.delete(UserTest.newUser(1L));
+        Question question1 = question.delete(UserTest.newUser(1L));
+        softly.assertThat(question1.isDeleted()).isTrue();
     }
 
     @Test(expected = UnAuthorizedException.class)

@@ -2,6 +2,7 @@ package codesquad.domain;
 
 import codesquad.UnAuthorizedException;
 import codesquad.security.LoginUser;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.Where;
 import org.slf4j.Logger;
 import support.domain.AbstractEntity;
@@ -34,6 +35,7 @@ public class Question extends AbstractEntity implements UrlGeneratable {
     @OneToMany(mappedBy = "question", cascade = CascadeType.ALL)
     @Where(clause = "deleted = false")
     @OrderBy("id ASC")
+    @JsonIgnore
     private List<Answer> answers = new ArrayList<>();
 
     private boolean deleted = false;
@@ -72,12 +74,19 @@ public class Question extends AbstractEntity implements UrlGeneratable {
         this.writer = loginUser;
     }
 
-    public Question addAnswer(User loginUser, Answer answer) {
-        if (isOwner(loginUser)) {
+    public Answer addAnswer(User loginUser, Answer answer) {
+        if (isLogin(loginUser)) {
             answer.toQuestion(this);
             answers.add(answer);
         }
-        return this;
+        return answer;
+    }
+
+    public boolean isLogin(User loginUser) {
+        if(loginUser == null) {
+            throw new UnAuthorizedException();
+        }
+        return true;
     }
 
     public boolean isOwner(User loginUser) {
@@ -91,11 +100,12 @@ public class Question extends AbstractEntity implements UrlGeneratable {
         return deleted;
     }
 
-    public void delete(User loginUser) {
+    public Question delete(User loginUser) {
         if (!isOwner(loginUser)) {
             throw new UnAuthorizedException();
         }
         deleted = true;
+        return this;
     }
 
     public Question modify(Question updateQuestion, User loginUser) {
@@ -105,6 +115,10 @@ public class Question extends AbstractEntity implements UrlGeneratable {
         contents = updateQuestion.contents;
         title = updateQuestion.title;
         return this;
+    }
+
+    public List<Answer> getAnswers() {
+        return answers;
     }
 
     @Override

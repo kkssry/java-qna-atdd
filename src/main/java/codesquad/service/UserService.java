@@ -16,8 +16,8 @@ public class UserService {
     @Resource(name = "userRepository")
     private UserRepository userRepository;
 
-    public User add(User user) {
-        return userRepository.save(user);
+    public User add(User newUser) {
+        return userRepository.save(newUser);
     }
 
     @Transactional
@@ -39,6 +39,6 @@ public class UserService {
         return userRepository
                 .findByUserId(userId)
                 .filter(x -> x.matchPassword(password))
-                .get();
+                .orElseThrow(UnAuthenticationException::new);
     }
 }

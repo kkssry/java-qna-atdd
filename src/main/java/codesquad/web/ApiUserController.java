@@ -34,7 +34,6 @@ public class ApiUserController {
 
     @PutMapping("{id}")
     public User update(@LoginUser User loginUser, @PathVariable long id, @Valid @RequestBody User updatedUser) {
-        System.out.println("!!!!!!!!!!!!!!!!" + loginUser);
         return userService.update(loginUser, id, updatedUser);
     }
 }
