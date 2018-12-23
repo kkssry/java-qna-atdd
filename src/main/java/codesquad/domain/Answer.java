@@ -47,6 +47,10 @@ public class Answer extends AbstractEntity implements UrlGeneratable {
         this.deleted = false;
     }
 
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
+    }
+
     public User getWriter() {
         return writer;
     }
@@ -103,8 +107,6 @@ public class Answer extends AbstractEntity implements UrlGeneratable {
     public boolean isDeleted() {
         return deleted;
     }
-
-
 
     @Override
     public String generateUrl() {

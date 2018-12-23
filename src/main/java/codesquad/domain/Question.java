@@ -105,6 +105,13 @@ public class Question extends AbstractEntity implements UrlGeneratable {
         if (!isOwner(loginUser)) {
             throw new UnAuthorizedException();
         }
+        long otherUserCount = answers.stream()
+                .filter(answer -> answer.getWriter() != writer)
+                .filter(answer -> answer.isDeleted() == false)
+                .count();
+        if (otherUserCount > 0) {
+            return this;
+        }
         deleted = true;
         return this;
     }

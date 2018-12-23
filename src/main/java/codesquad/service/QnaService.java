@@ -46,8 +46,8 @@ public class QnaService {
     }
 
     @Transactional
-    public void deleteQuestion(User loginUser, long questionId) {
-        findByQuestionId(questionId).delete(loginUser);
+    public Question deleteQuestion(User loginUser, long questionId) {
+        return findByQuestionId(questionId).delete(loginUser);
     }
 
     public Iterable<Question> findAll() {
