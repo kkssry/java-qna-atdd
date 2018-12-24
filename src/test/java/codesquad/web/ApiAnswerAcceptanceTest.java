@@ -13,6 +13,10 @@ import static org.slf4j.LoggerFactory.getLogger;
 public class ApiAnswerAcceptanceTest extends AcceptanceTest {
     private static final Logger log = getLogger(ApiAnswerAcceptanceTest.class);
 
+    protected Question createQuestion() {
+        return new Question("제목입니다.", "내용입니다.");
+    }
+
     @Test
     public void create_글자수_제한() {
         String location = createResource("/api/questions", createQuestion());
@@ -42,8 +46,8 @@ public class ApiAnswerAcceptanceTest extends AcceptanceTest {
                 .postForEntity(location + "/answers", newAnswer.getContents(), Question.class);       //sanjigi가 위에 만든 질문안에 위에서 만든 댓글을 달음 , apiAnswerController에서 질문 생성한 맵핑메서드의 반환값이 나오므로 제네릭이 Question, Answer을 넣어도 controller의 반환값인 question이 반환된다.
         log.debug("answerCreateResponse : {}", answerCreateResponse);                                            // /api/questions/{만들질문ID}/answer로 보낸 응답값
 
-        ResponseEntity<Answer> answerDeleteResponse = basicAuthTemplate(findByUserId("sanjigi"))
-                .exchange(location + "/answers/" + answerCreateResponse.getBody().getId(), HttpMethod.DELETE, createHttpEntity(answerCreateResponse.getBody()), Answer.class);
+        ResponseEntity<Question> answerDeleteResponse = basicAuthTemplate(findByUserId("sanjigi"))
+                .exchange(location + "/answers/" + answerCreateResponse.getBody().getId(), HttpMethod.DELETE, createHttpEntity(answerCreateResponse.getBody()), Question.class);
         // sanjigi가 위와 같은 상황에서 아까 만든 댓글을 지웠다. , (주의 할점은 exchange 의 매개변수에서 HttpEntity부에는 location에 맵핑한 메서드의 매개변수와 일치하게 된다. -- 여기선 맵핑할 메서드의 매개변수가 없으므로 아무거나 와도 상관 없다.)
         // answerId 와 questionId가 우연한 일치로 3번으로 똑같다. answerId를 가져오려면 answer를 생성할때 내용으로만 생성할때는 하드코딩 or answer를 생성하려고 할때 id값을 부여해야 한다.
         log.debug("answerDeleteResponse : {}", answerDeleteResponse);

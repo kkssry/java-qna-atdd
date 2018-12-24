@@ -12,6 +12,14 @@ import static org.slf4j.LoggerFactory.getLogger;
 public class ApiQuestionAcceptanceTest extends AcceptanceTest {
     private static final Logger log = getLogger(ApiQuestionAcceptanceTest.class);
 
+    protected Question createQuestion() {
+        return new Question("제목입니다.", "내용입니다.");
+    }
+
+    protected Question updateQuestion() {
+        return new Question("업데이트 제목", "업데이트 내용");
+    }
+
     @Test
     public void create() {
         String location = createResource("/api/questions", createQuestion());

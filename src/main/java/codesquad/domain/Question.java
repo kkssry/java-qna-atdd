@@ -12,6 +12,8 @@ import support.domain.UrlGeneratable;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -35,12 +37,15 @@ public class Question extends AbstractEntity implements UrlGeneratable {
     private User writer;
 
     @OneToMany(mappedBy = "question", cascade = CascadeType.ALL)
+    // fetch = FetchType.LAZY , fetch = FetchType.EGGER의 차이점.
     @Where(clause = "deleted = false")
     @OrderBy("id ASC")
     @JsonIgnore
-    private List<Answer> answers = new ArrayList<>();
+    private List<Answer> answers = new ArrayList<>();           //1개 테이블과 n개의 객체와 맵핑하는게 올바른 설계 , 1개 테이블과 1개 객체 맵핑(올바른 설계가 아닐수 있다.)
 
     private boolean deleted = false;
+
+    private LocalDateTime createDate = LocalDateTime.now();
 
     public Question() {
     }
@@ -68,17 +73,19 @@ public class Question extends AbstractEntity implements UrlGeneratable {
         return this;
     }
 
+
     public User getWriter() {
         return writer;
     }
 
     public void writtenBy(User loginUser) {
-        if (isLogin(loginUser)){
+        if (isLogin(loginUser)) {
             this.writer = loginUser;
         }
     }
 
     public Answer addAnswer(User loginUser, Answer answer) {
+
         if (isLogin(loginUser)) {
             answer.toQuestion(this);
             answers.add(answer);
@@ -87,7 +94,7 @@ public class Question extends AbstractEntity implements UrlGeneratable {
     }
 
     public boolean isLogin(User loginUser) {
-        if(loginUser == null) {
+        if (loginUser == null) {
             throw new UnAuthenticationException();
         }
         return true;
@@ -106,15 +113,33 @@ public class Question extends AbstractEntity implements UrlGeneratable {
         if (!isOwner(loginUser)) {
             throw new UnAuthorizedException();
         }
+
         long otherUserCount = answers.stream()
                 .filter(answer -> answer.getWriter() != writer)
-                .filter(answer -> answer.isDeleted() == false)
+                .filter(answer -> !answer.isDeleted())
                 .count();
+
         if (otherUserCount > 0) {
             throw new CannotDeleteException();
         }
+
+        answers.stream().map(answer -> answer.delete(writer));
         deleted = true;
         return this;
+    }
+
+    public DeleteHistory createQuestionOfDeleteHistory(long id) {
+        return new DeleteHistory(ContentType.QUESTION, id, writer);
+    }
+
+    public List<DeleteHistory> createDeleteHistories() {
+        List<DeleteHistory> deleteHistories = new ArrayList<>();
+
+        for (Answer answer : answers) {
+            deleteHistories.add(answer.createAnswerOfDeleteHistory());
+        }
+
+        return deleteHistories;
     }
 
     public Question modify(Question updateQuestion, User loginUser) {

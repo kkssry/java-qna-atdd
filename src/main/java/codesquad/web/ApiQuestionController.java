@@ -1,10 +1,13 @@
 package codesquad.web;
 
+import codesquad.domain.DeleteHistory;
 import codesquad.domain.Question;
 import codesquad.domain.User;
 import codesquad.security.LoginUser;
+import codesquad.service.DeleteHistoryService;
 import codesquad.service.QnaService;
 import org.slf4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,6 +26,9 @@ public class ApiQuestionController {
 
     @Resource(name = "qnaService")
     private QnaService qnaService;
+
+    @Autowired
+    private DeleteHistoryService deleteHistoryService;
 
     @PostMapping("")                                                        //RequestBody : json객체를 자바객체로 맵핑해라.(set메서드를 통해서)
     public ResponseEntity<Question> create(@LoginUser User loginUser, @Valid @RequestBody Question question) {
@@ -47,6 +53,9 @@ public class ApiQuestionController {
 
     @DeleteMapping("/{id}")
     public Question delete(@LoginUser User loginUser, @PathVariable long id) {
-        return qnaService.deleteQuestion(loginUser,id);
+        Question question = qnaService.deleteQuestion(loginUser,id);
+        // 로그기록
+        deleteHistoryService.saveAll(DeleteHistory.createDeleteHistory(question,id));
+        return question;
     }
 }

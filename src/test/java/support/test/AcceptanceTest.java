@@ -54,14 +54,6 @@ public abstract class AcceptanceTest extends BaseTest {
         return basicAuthTemplate(loginUser).getForObject(location, responseType);
     }
 
-    protected Question createQuestion() {
-        return new Question("제목입니다.", "내용입니다.");
-    }
-
-    protected Question updateQuestion() {
-        return new Question("업데이트 제목", "업데이트 내용");
-    }
-
     protected HttpEntity createHttpEntity(Object body) {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);

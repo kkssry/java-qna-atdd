@@ -8,6 +8,7 @@ import support.domain.UrlGeneratable;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
+import java.util.Objects;
 
 @Entity
 public class Answer extends AbstractEntity implements UrlGeneratable {
@@ -98,7 +99,7 @@ public class Answer extends AbstractEntity implements UrlGeneratable {
     }
 
     public Boolean isLogin(User writer) {
-        if (writer == null){
+        if (Objects.isNull(writer)){
             throw new UnAuthenticationException();
         }
         return true;
@@ -106,6 +107,10 @@ public class Answer extends AbstractEntity implements UrlGeneratable {
 
     public boolean isDeleted() {
         return deleted;
+    }
+
+    public DeleteHistory createAnswerOfDeleteHistory() {
+        return new DeleteHistory(ContentType.ANSWER, getId(), writer);
     }
 
     @Override
