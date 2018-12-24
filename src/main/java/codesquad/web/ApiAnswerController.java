@@ -1,10 +1,10 @@
 package codesquad.web;
 
-import codesquad.domain.Answer;
-import codesquad.domain.Question;
-import codesquad.domain.User;
+import codesquad.domain.*;
 import codesquad.security.LoginUser;
+import codesquad.service.DeleteHistoryService;
 import codesquad.service.QnaService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +19,9 @@ public class ApiAnswerController {
     @Resource(name = "qnaService")
     private QnaService qnaService;
 
+    @Autowired
+    private DeleteHistoryService deleteHistoryService;
+
     @PostMapping("")
     public ResponseEntity<Question> create(@LoginUser User loginUser, @PathVariable long questionId, @Valid @RequestBody String contents) {
         qnaService.addReply(loginUser, questionId, contents);
@@ -28,6 +31,9 @@ public class ApiAnswerController {
 
     @DeleteMapping("/{answerId}")
     public Answer delete(@LoginUser User loginUser, @PathVariable long answerId) {
+        deleteHistoryService.save(new DeleteHistory(ContentType.ANSWER, answerId,loginUser));
         return qnaService.deleteAnswer(loginUser, answerId);
     }
+
+
 }

@@ -21,5 +21,9 @@ public class DeleteHistoryService {
         }
     }
 
+    @Transactional
+    public void save(DeleteHistory deleteHistory) {
+        deleteHistoryRepository.save(deleteHistory);
+    }
 
 }
