@@ -95,10 +95,9 @@ public class ApiQuestionAcceptanceTest extends AcceptanceTest {
     @Test
     public void delete_question_with_other_user_answer() {
         String location = createResource("/api/questions", createQuestion());                           // 질문 생성
-        Answer answer = new Answer("댓글입니다.");
 
         ResponseEntity<Question> answerCreateResponse = basicAuthTemplate(findByUserId("sanjigi"))
-                .postForEntity(location + "/answers", answer.getContents(), Question.class);            // 위 질문에 댓글 달음
+                .postForEntity(location + "/answers", "댓글입니다.", Question.class);            // 위 질문에 댓글 달음
 
         ResponseEntity<Question> responseEntity
                 = basicAuthTemplate().exchange(location, HttpMethod.DELETE, new HttpEntity<>(new HttpHeaders()), Question.class);
@@ -114,10 +113,12 @@ public class ApiQuestionAcceptanceTest extends AcceptanceTest {
         ResponseEntity<Question> answerCreateResponse = basicAuthTemplate(findByUserId("sanjigi"))
                 .postForEntity(location + "/answers", answer.getContents(), Question.class);
 
-        ResponseEntity<Question> responseEntity
-                = template().exchange(location, HttpMethod.DELETE, new HttpEntity<>(new HttpHeaders()), Question.class);
+        ResponseEntity<Answer> responseEntity
+                = basicAuthTemplate().exchange(location, HttpMethod.DELETE, new HttpEntity<>(new HttpHeaders()), Answer.class);
 
-        softly.assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
+        log.debug("response : {}", responseEntity.getBody().getDeleted());
+//        responseEntity.getBody().getAnswers().forEach(System.out::println);
+        softly.assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
     }
 
     @Test

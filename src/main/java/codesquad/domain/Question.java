@@ -17,7 +17,9 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
+import static codesquad.domain.User.GUEST_USER;
 import static org.slf4j.LoggerFactory.getLogger;
 
 @Entity
@@ -85,7 +87,6 @@ public class Question extends AbstractEntity implements UrlGeneratable {
     }
 
     public Answer addAnswer(User loginUser, Answer answer) {
-
         if (isLogin(loginUser)) {
             answer.toQuestion(this);
             answers.add(answer);
@@ -94,15 +95,17 @@ public class Question extends AbstractEntity implements UrlGeneratable {
     }
 
     public boolean isLogin(User loginUser) {
-        if (loginUser == null) {
+        if (Objects.isNull(loginUser)) {
             throw new UnAuthenticationException();
         }
         return true;
     }
 
     public boolean isOwner(User loginUser) {
-        isLogin(loginUser);
-        return writer.equals(loginUser);
+        if (isLogin(loginUser)){
+            return writer.equals(loginUser);
+        }
+        throw new UnAuthorizedException();
     }
 
     public boolean isDeleted() {
@@ -115,7 +118,7 @@ public class Question extends AbstractEntity implements UrlGeneratable {
         }
 
         long otherUserCount = answers.stream()
-                .filter(answer -> answer.getWriter() != writer)
+                .filter(answer -> !answer.isOwner(writer))
                 .filter(answer -> !answer.isDeleted())
                 .count();
 
@@ -123,22 +126,20 @@ public class Question extends AbstractEntity implements UrlGeneratable {
             throw new CannotDeleteException();
         }
 
-        answers.stream().map(answer -> answer.delete(writer));
+        for (Answer answer : answers) {
+            answer.delete(writer);
+        }
+
         deleted = true;
         return this;
     }
 
-    public DeleteHistory createQuestionOfDeleteHistory(long id) {
-        return new DeleteHistory(ContentType.QUESTION, id, writer);
-    }
-
-    public List<DeleteHistory> createDeleteHistories() {
+    public List<DeleteHistory> createDeleteHistories(long id) {
         List<DeleteHistory> deleteHistories = new ArrayList<>();
-
+        deleteHistories.add(new DeleteHistory(ContentType.QUESTION, id, writer));
         for (Answer answer : answers) {
             deleteHistories.add(answer.createAnswerOfDeleteHistory());
         }
-
         return deleteHistories;
     }
 

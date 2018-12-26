@@ -69,7 +69,6 @@ public class Answer extends AbstractEntity implements UrlGeneratable {
         return this;
     }
 
-
     public void setQuestion(Question question) {
         this.question = question;
     }
@@ -77,7 +76,6 @@ public class Answer extends AbstractEntity implements UrlGeneratable {
     public boolean getDeleted() {
         return deleted;
     }
-
 
     public void toQuestion(Question question) {
         this.question = question;
@@ -98,7 +96,7 @@ public class Answer extends AbstractEntity implements UrlGeneratable {
         return this;
     }
 
-    public Boolean isLogin(User writer) {
+    public boolean isLogin(User writer) {
         if (Objects.isNull(writer)){
             throw new UnAuthenticationException();
         }

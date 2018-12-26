@@ -31,14 +31,6 @@ public class DeleteHistory {
         this.deletedBy = deletedBy;
     }
 
-    public static List<DeleteHistory> createDeleteHistory(Question question, long id) {
-        List<DeleteHistory> deleteHistories = new ArrayList<>();
-        deleteHistories.add(question.createQuestionOfDeleteHistory(id));
-        for (DeleteHistory deleteHistory : question.createDeleteHistories()) {
-            deleteHistories.add(deleteHistory);
-        }
-        return deleteHistories;
-    }
 
     @Override
     public String toString() {

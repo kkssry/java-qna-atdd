@@ -40,7 +40,6 @@ public abstract class AcceptanceTest extends BaseTest {
     }
 
     protected User findByUserId(String userId) {
-
         return userRepository.findByUserId(userId).get();
     }
 

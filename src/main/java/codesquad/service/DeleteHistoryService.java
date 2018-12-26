@@ -25,5 +25,4 @@ public class DeleteHistoryService {
     public void save(DeleteHistory deleteHistory) {
         deleteHistoryRepository.save(deleteHistory);
     }
-
 }

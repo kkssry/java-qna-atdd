@@ -110,7 +110,7 @@ public class User extends AbstractEntity {
     }
 
     @JsonIgnore
-    public boolean isGuestUser() {
+    public  boolean isGuestUser() {
         return false;
     }
 
